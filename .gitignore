@@ -1,0 +1,6 @@
+./bin/*
+./dist/*
+./build/*
+/lucene-4.10.0.tgz
+lucene-4.6.0
+./lucene-4.6.0.tgz
