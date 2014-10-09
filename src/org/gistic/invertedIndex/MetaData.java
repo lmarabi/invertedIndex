@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Fields;
 import org.apache.lucene.index.IndexReader;
@@ -105,7 +106,7 @@ public class MetaData {
         long threshold = (long) (reader.maxDoc() * 0.01);
         System.out.println("Threshold = "+threshold);
        
-        HashMap<String,Integer> keywords = new HashMap<>();
+        HashMap<String,Integer> keywords = new HashMap<String, Integer>();
       Fields fields = MultiFields.getFields(reader);
         Terms terms = fields.terms(field);
         TermsEnum iterator = terms.iterator(TermsEnum.EMPTY);
@@ -123,8 +124,8 @@ public class MetaData {
        while(it.hasNext()){
            Map.Entry obj = (Map.Entry) it.next();
            //System.out.println("k: "+obj.getKey()+" v: "+obj.getValue());
-           writer.append(",["+(String)obj.getKey()+"-"+(int)obj.getValue()+"]");
-           if((int)obj.getValue() < threshold){
+           writer.append(",["+(String)obj.getKey()+"-"+obj.getValue()+"]");
+           if(Integer.parseInt(obj.getValue().toString()) < threshold){
                break;
            }
        }

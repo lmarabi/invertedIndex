@@ -29,8 +29,8 @@ public class KWIndexBuilder {
     }
 
     public static void main(String[] args) throws ParseException {
-        String dataFolders = "/Users/louai/microblogsDataset/test/data/";
-        String indexPath = "/Users/louai/microblogsDataset/test/index/";
+        String dataFolders = "/export/scratch/louai/test/tweet/";
+        String indexPath = "/export/scratch/louai/test/index/invertedindex/";
         KWIndexBuilder indexBuilder = new KWIndexBuilder();
         String[] files = indexBuilder.getFilesPaths(dataFolders);
         indexBuilder.buildIndex(files, indexPath, true, dataType.tweets);
