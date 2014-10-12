@@ -119,7 +119,7 @@ public class MetaData {
        Map<String,Integer> sortedList = sortByComparator(keywords, DESC);
        System.out.println(sortedList.size());
        keywords = (HashMap<String, Integer>) sortedList;
-       writer.write(day);
+       writer.append(day);
        Iterator it = keywords.entrySet().iterator();
        while(it.hasNext()){
            Map.Entry obj = (Map.Entry) it.next();
