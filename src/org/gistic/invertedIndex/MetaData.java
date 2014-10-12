@@ -84,7 +84,7 @@ public class MetaData {
      * @return
      * @throws IOException 
      */
-    public boolean buildMetaData(String indexDir, String path, String  day) throws IOException {
+    public boolean buildMetaData(String indexDir, String path, String  day, int threshold) throws IOException {
         File file = new File(
                         new File(path)+"/_inverted_metadata");
         if(!file.exists()){
@@ -103,7 +103,7 @@ public class MetaData {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        long threshold = (long) (reader.maxDoc() * 0.01);
+//        long threshold = (long) (reader.maxDoc() * 0.01);
         System.out.println("Threshold = "+threshold);
        
         HashMap<String,Integer> keywords = new HashMap<String, Integer>();
