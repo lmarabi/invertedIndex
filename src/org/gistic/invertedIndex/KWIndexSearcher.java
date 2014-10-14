@@ -32,9 +32,9 @@ public class KWIndexSearcher {
      * @param args
      */
     public static void main(String[] args) throws UnsupportedEncodingException, IOException {
-        String indexPath = "/Users/louai/microblogsDataset/test/index/";
+        String indexPath = "/export/scratch/louai/test/test2/index/";
         KWIndexSearcher searcher = new KWIndexSearcher();
-        String query = "الله";
+        String query = "hello";
         searcher.search(indexPath, dataType.tweets, query, Integer.MAX_VALUE);
     }
 

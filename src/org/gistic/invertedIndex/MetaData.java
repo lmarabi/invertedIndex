@@ -91,7 +91,7 @@ public class MetaData {
             file.createNewFile();
         }
         Writer writer  = new BufferedWriter(new OutputStreamWriter(
-			new FileOutputStream(file), "UTF8"));
+			new FileOutputStream(file, true), "UTF8"));
         
         double startTime = System.currentTimeMillis();
         String field;
@@ -198,7 +198,7 @@ public class MetaData {
      * @param args
      */
     public static void main(String[] args) throws UnsupportedEncodingException, IOException {
-        String indexPath = "/Users/louai/microblogsDataset/test/index/";
+        String indexPath = "/export/scratch/louai/test/test2/index/";
         MetaData searcher = new MetaData();
 //        searcher.buildMetaData(indexPath, "2014-01-06");
         searcher.readMetaData(indexPath);

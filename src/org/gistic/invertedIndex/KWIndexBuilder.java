@@ -7,6 +7,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.commons.compress.compressors.CompressorException;
+import org.apache.commons.compress.compressors.CompressorInputStream;
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.ar.ArabicAnalyzer;
 import org.apache.lucene.document.Document;
@@ -28,9 +32,9 @@ public class KWIndexBuilder {
         tweets, hashtags;
     }
 
-    public static void main(String[] args) throws ParseException {
-        String dataFolders = "/export/scratch/louai/test/tweet/";
-        String indexPath = "/export/scratch/louai/test/index/invertedindex/";
+    public static void main(String[] args) throws ParseException, CompressorException {
+        String dataFolders = "/export/scratch/louai/test/test2/data/";
+        String indexPath = "/export/scratch/louai/test/test2/index/";
         KWIndexBuilder indexBuilder = new KWIndexBuilder();
         String[] files = indexBuilder.getFilesPaths(dataFolders);
         indexBuilder.buildIndex(files, indexPath, true, dataType.tweets);
@@ -46,8 +50,9 @@ public class KWIndexBuilder {
      * @param dataFiles
      * @param indexPath
      * @return true if building index success otherwise return false
+     * @throws CompressorException 
      */
-    public boolean buildIndex(List<File> dataFiles, String indexPath, dataType type) {
+    public boolean buildIndex(List<File> dataFiles, String indexPath, dataType type) throws CompressorException {
         String[] dataFolders = new String[dataFiles.size()];
         int counter = 0;
         for (File f : dataFiles) {
@@ -64,7 +69,7 @@ public class KWIndexBuilder {
     }
 
     
-    public boolean buildIndex(String[] dataFolders, String indexPath, boolean create, dataType type) throws ParseException {
+    public boolean buildIndex(String[] dataFolders, String indexPath, boolean create, dataType type) throws ParseException, CompressorException {
         boolean result = false;
         Date start = new Date();
         try {
@@ -114,14 +119,14 @@ public class KWIndexBuilder {
         return result;
     }
 
-    private boolean index(IndexWriter writer, String[] dataFolders, dataType type) throws ParseException {
+    private boolean index(IndexWriter writer, String[] dataFolders, dataType type) throws ParseException, CompressorException {
         BufferedReader filesReader;
         try {
             System.out.println("indexing :" + dataFolders.length + " files");
             //filesReader = new TwitterFileStream(filesPaths , true , i);
 
             for (int j = 0; j < dataFolders.length; j++) {
-                filesReader = new BufferedReader(new FileReader(new File(dataFolders[j])));
+                filesReader = getBufferedReaderForBZ2File(new File(dataFolders[j]));
                 System.out.println(dataFolders[j]);
                 String line = "";
                 while ((line = filesReader.readLine()) != null) {
@@ -146,7 +151,14 @@ public class KWIndexBuilder {
         return true;
     }
 
-    
+    public static BufferedReader getBufferedReaderForBZ2File(File fileIn) throws FileNotFoundException, CompressorException {
+        FileInputStream fin = new FileInputStream(fileIn);
+        BufferedInputStream bis = new BufferedInputStream(fin);
+        CompressorInputStream input = new CompressorStreamFactory().createCompressorInputStream(bis);
+        BufferedReader br2 = new BufferedReader(new InputStreamReader(input));
+
+        return br2;
+    }
 
     private void addDoc(IndexWriter w, String line, dataType type) throws IOException, ParseException {
         Document doc = new Document();
