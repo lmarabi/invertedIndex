@@ -131,6 +131,7 @@ public class MetaData {
        }
         double endTime = System.currentTimeMillis();
         System.out.println("execution Time in MilliSeconds: " + (endTime - startTime));
+        writer.append("\n");
         writer.flush();
         writer.close();
         return true;
