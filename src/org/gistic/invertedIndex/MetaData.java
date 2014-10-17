@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -124,10 +125,108 @@ public class MetaData {
        while(it.hasNext()){
            Map.Entry obj = (Map.Entry) it.next();
            //System.out.println("k: "+obj.getKey()+" v: "+obj.getValue());
-           writer.append(",["+(String)obj.getKey()+"-"+obj.getValue()+"]");
+           writer.append(",["+(String)obj.getKey().toString().replace(',', ' ')+"-"+obj.getValue()+"]");
            if(Integer.parseInt(obj.getValue().toString()) < threshold){
                break;
            }
+       }
+        double endTime = System.currentTimeMillis();
+        System.out.println("execution Time in MilliSeconds: " + (endTime - startTime));
+        writer.append("\n");
+        writer.flush();
+        writer.close();
+        return true;
+    }
+    
+    /**
+     * This method return all the keywords in inverted index.
+     * @param indexpath
+     * @return
+     * @throws IOException 
+     */
+    public List<String> getAllKeywordOfIndex(String indexpath) throws IOException{
+    	List<String> temp = new ArrayList<String>();
+    	String field;
+        field = "tweetText";
+    	IndexReader reader = null;
+        try {
+            reader = DirectoryReader.open(FSDirectory.open(new File(indexpath)));
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+       
+        HashMap<String,Integer> keywords = new HashMap<String, Integer>();
+      Fields fields = MultiFields.getFields(reader);
+        Terms terms = fields.terms(field);
+        TermsEnum iterator = terms.iterator(TermsEnum.EMPTY);
+        BytesRef byteRef = null;
+        while((byteRef = iterator.next()) != null) {
+            String term = new String(byteRef.bytes, byteRef.offset, byteRef.length);
+            keywords.put(term, iterator.docFreq());
+        }
+       
+       Map<String,Integer> sortedList = sortByComparator(keywords, ASC);
+       System.out.println(sortedList.size());
+       keywords = (HashMap<String, Integer>) sortedList;
+       Iterator it = keywords.entrySet().iterator();
+       while(it.hasNext()){
+           Map.Entry obj = (Map.Entry) it.next();
+           temp.add(obj.getKey().toString().replace(',', ' '));
+           
+       }
+    
+    	return temp;
+    }
+    
+    
+    /**
+     * This method create the meta data for the inverted index
+     * @param indexDir the directory where the inverted index exist 
+     * @param path the folder path where the meta-data will be saved 
+     * @param day the day of the current inverted index
+     * @return
+     * @throws IOException 
+     */
+    public boolean getAllKeywordOfInvertedIndex(String indexDir, String path) throws IOException {
+        File file = new File(
+                        new File(path)+"/_inverted_allKeywords");
+        if(!file.exists()){
+            file.createNewFile();
+        }
+        Writer writer  = new BufferedWriter(new OutputStreamWriter(
+			new FileOutputStream(file, true), "UTF8"));
+        
+        double startTime = System.currentTimeMillis();
+        String field;
+        field = "tweetText";
+      
+        IndexReader reader = null;
+        try {
+            reader = DirectoryReader.open(FSDirectory.open(new File(indexDir)));
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+       
+        HashMap<String,Integer> keywords = new HashMap<String, Integer>();
+      Fields fields = MultiFields.getFields(reader);
+        Terms terms = fields.terms(field);
+        TermsEnum iterator = terms.iterator(TermsEnum.EMPTY);
+        BytesRef byteRef = null;
+        while((byteRef = iterator.next()) != null) {
+            String term = new String(byteRef.bytes, byteRef.offset, byteRef.length);
+            keywords.put(term, iterator.docFreq());
+        }
+       
+       Map<String,Integer> sortedList = sortByComparator(keywords, DESC);
+       System.out.println(sortedList.size());
+       keywords = (HashMap<String, Integer>) sortedList;
+       writer.append(day);
+       Iterator it = keywords.entrySet().iterator();
+       while(it.hasNext()){
+           Map.Entry obj = (Map.Entry) it.next();
+           //System.out.println("k: "+obj.getKey()+" v: "+obj.getValue());
+           writer.append((String)obj.getKey().toString().replace(',', ' ')+"\n");
+           
        }
         double endTime = System.currentTimeMillis();
         System.out.println("execution Time in MilliSeconds: " + (endTime - startTime));
@@ -199,9 +298,10 @@ public class MetaData {
      * @param args
      */
     public static void main(String[] args) throws UnsupportedEncodingException, IOException {
-        String indexPath = "/export/scratch/louai/test/test2/index/";
+        String indexPath = "/export/scratch/louai/test/index/invertedindex/tweets/Day/index.2014-05-02/";
+        String storedPath = "/export/scratch/louai/test/index/invertedindex/";
         MetaData searcher = new MetaData();
 //        searcher.buildMetaData(indexPath, "2014-01-06");
-        searcher.readMetaData(indexPath);
+        searcher.getAllKeywordOfInvertedIndex(indexPath, storedPath);
     }
 }

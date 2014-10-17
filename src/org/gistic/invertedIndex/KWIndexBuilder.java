@@ -33,10 +33,11 @@ public class KWIndexBuilder {
     }
 
     public static void main(String[] args) throws ParseException, CompressorException {
-        String dataFolders = "/export/scratch/louai/test/test2/data/";
-        String indexPath = "/export/scratch/louai/test/test2/index/";
+        String dataFolders = "/export/scratch/louai/test/tweets/2014-05-02.bz2";
+        String indexPath = "/export/scratch/louai/test/index/invertedindex/tweets/Day/index.2014-05-02/";
         KWIndexBuilder indexBuilder = new KWIndexBuilder();
-        String[] files = indexBuilder.getFilesPaths(dataFolders);
+        //String[] files = indexBuilder.getFilesPaths(dataFolders);
+        String[] files = {"/export/scratch/louai/test/tweet/2014-05-02.bz2"};
         indexBuilder.buildIndex(files, indexPath, true, dataType.tweets);
     }
 
