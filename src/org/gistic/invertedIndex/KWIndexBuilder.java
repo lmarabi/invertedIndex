@@ -13,6 +13,7 @@ import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.ar.ArabicAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
@@ -33,11 +34,11 @@ public class KWIndexBuilder {
     }
 
     public static void main(String[] args) throws ParseException, CompressorException {
-        String dataFolders = "/export/scratch/louai/test/tweets/2014-05-02.bz2";
-        String indexPath = "/export/scratch/louai/test/index/invertedindex/tweets/Day/index.2014-05-02/";
+        String dataFolders = "/export/scratch/louai/test/2014-05-02.bz2";
+        String indexPath = "/export/scratch/louai/test/index/index.2014-05-02/";
         KWIndexBuilder indexBuilder = new KWIndexBuilder();
         //String[] files = indexBuilder.getFilesPaths(dataFolders);
-        String[] files = {"/export/scratch/louai/test/tweet/2014-05-02.bz2"};
+        String[] files = {"/export/scratch/louai/test/2014-05-02.bz2"};
         indexBuilder.buildIndex(files, indexPath, true, dataType.tweets);
     }
 
@@ -77,8 +78,8 @@ public class KWIndexBuilder {
             System.out.println("Indexing to directory '" + indexPath + "'...");
 
             Directory dir = FSDirectory.open(new File(indexPath));
-            //Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_46);
-            Analyzer analyzer = new ArabicAnalyzer(Version.LUCENE_46);
+            Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_46);
+//            Analyzer analyzer = new ArabicAnalyzer(Version.LUCENE_46);
             IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_46, analyzer);
             
             if (create) {

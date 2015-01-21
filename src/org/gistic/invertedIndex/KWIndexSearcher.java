@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.ar.ArabicAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
@@ -32,31 +33,31 @@ public class KWIndexSearcher {
 	 */
 	public static void main(String[] args) throws UnsupportedEncodingException,
 			IOException {
-		String indexPath = "/export/scratch/louai/test/index/invertedindex/tweets/Day/index.2014-05-02";
-		String resultPath = "/export/scratch/louai/test/index/invertedindex";
-		File file = new File(new File(resultPath) + "/_inverted_time");
-		if (!file.exists()) {
-			file.createNewFile();
-		}
-		Writer writer = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream(file, true), "UTF8"));
+		String indexPath = "/export/scratch/louai/test/index/index.2014-05-02/";
+//		String resultPath = "/export/scratch/louai/test/";
+//		File file = new File(new File(resultPath) + "/_inverted_time");
+//		if (!file.exists()) {
+//			file.createNewFile();
+//		}
+//		Writer writer = new BufferedWriter(new OutputStreamWriter(
+//				new FileOutputStream(file, true), "UTF8"));
 		KWIndexSearcher searcher = new KWIndexSearcher();
 		String query = "hello";
 		MetaData meta = new MetaData();
-		List<String> keywords = meta.getAllKeywordOfIndex(indexPath);
-		for (int i = 0; i < keywords.size(); i++) {
-			query = keywords.get(i);
+//		List<String> keywords = meta.getAllKeywordOfIndex(indexPath);
+//		for (int i = 0; i < keywords.size(); i++) {
+//			query = keywords.get(i);
 			double starttime = System.currentTimeMillis();
 			searcher.search(indexPath, dataType.tweets, query,
 					Integer.MAX_VALUE);
 			double endtime = System.currentTimeMillis();
 			System.out.println("Execution time in milliseconds: "
 					+ (endtime - starttime));
-			writer.append("query,"+(endtime - starttime)+"\n");
+//			writer.append("query,"+(endtime - starttime)+"\n");
 
-		}
-		writer.flush();
-		writer.close();
+//		}
+//		writer.flush();
+//		writer.close();
 	}
 
 	/**
@@ -94,7 +95,7 @@ public class KWIndexSearcher {
 		}
 		IndexSearcher searcher = new IndexSearcher(reader);
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_46);
-		// Analyzer analyzer = new ArabicAnalyzer(Version.LUCENE_46);
+//		 Analyzer analyzer = new ArabicAnalyzer(Version.LUCENE_46);
 
 		int count = 0;
 		QueryParser parser = new QueryParser(Version.LUCENE_46, field, analyzer);

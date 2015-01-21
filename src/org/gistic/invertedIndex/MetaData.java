@@ -301,7 +301,7 @@ public class MetaData {
         String indexPath = "/export/scratch/louai/test/index/invertedindex/tweets/Day/index.2014-05-02/";
         String storedPath = "/export/scratch/louai/test/index/invertedindex/";
         MetaData searcher = new MetaData();
-//        searcher.buildMetaData(indexPath, "2014-01-06");
-        searcher.getAllKeywordOfInvertedIndex(indexPath, storedPath);
+        searcher.buildMetaData(indexPath,storedPath, "2014-05-03",5000);
+        //searcher.getAllKeywordOfInvertedIndex(indexPath, storedPath);
     }
 }
