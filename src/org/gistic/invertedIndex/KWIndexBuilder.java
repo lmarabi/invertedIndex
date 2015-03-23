@@ -78,9 +78,9 @@ public class KWIndexBuilder {
             System.out.println("Indexing to directory '" + indexPath + "'...");
 
             Directory dir = FSDirectory.open(new File(indexPath));
-            Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_46);
+            Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_CURRENT);
 //            Analyzer analyzer = new ArabicAnalyzer(Version.LUCENE_46);
-            IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_46, analyzer);
+            IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_CURRENT, analyzer);
             
             if (create) {
                 // Create a new index in the directory, removing any
@@ -109,6 +109,7 @@ public class KWIndexBuilder {
             //
             // writer.forceMerge(1);
             writer.close();
+            dir.close();
 
             Date end = new Date();
             System.out.println(end.getTime() - start.getTime() + " total milliseconds");

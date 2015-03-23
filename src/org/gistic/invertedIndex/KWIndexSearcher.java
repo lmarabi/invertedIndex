@@ -14,6 +14,7 @@ import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
@@ -34,7 +35,7 @@ public class KWIndexSearcher {
 	public static void main(String[] args) throws UnsupportedEncodingException,
 			IOException {
 		String indexPath = "/export/scratch/louai/test/index/index.2014-05-02/";
-//		String resultPath = "/export/scratch/louai/test/";
+//		String indexPath = "/export/scratch/louai/indeces/index/invertedindex//tweets/Day/index.2014-06-04/";
 //		File file = new File(new File(resultPath) + "/_inverted_time");
 //		if (!file.exists()) {
 //			file.createNewFile();
@@ -59,6 +60,7 @@ public class KWIndexSearcher {
 //		writer.flush();
 //		writer.close();
 	}
+	
 
 	/**
 	 * This method search inside the inverted index by passing the following
@@ -88,17 +90,21 @@ public class KWIndexSearcher {
 		boolean raw = false;
 
 		IndexReader reader = null;
+		IndexSearcher searcher = null;
+		
 		try {
+			//reader = DirectoryReader.open(FSDirectory.open(index));
 			reader = DirectoryReader.open(FSDirectory.open(new File(index)));
+			searcher = new IndexSearcher(reader);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		IndexSearcher searcher = new IndexSearcher(reader);
-		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_46);
+//		IndexSearcher searcher = new IndexSearcher(reader);
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_CURRENT);
 //		 Analyzer analyzer = new ArabicAnalyzer(Version.LUCENE_46);
 
 		int count = 0;
-		QueryParser parser = new QueryParser(Version.LUCENE_46, field, analyzer);
+		QueryParser parser = new QueryParser(Version.LUCENE_CURRENT, field, analyzer);
 		while (true) {
 			try {
 				String line = queryString;
